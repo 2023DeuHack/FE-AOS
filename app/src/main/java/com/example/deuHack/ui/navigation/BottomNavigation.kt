@@ -95,7 +95,8 @@ fun NavigationGraph(
     searchViewModel: SearchViewModel,
     navigationViewModel: NavigationViewModel,
     profileViewModel: ProfileViewModel = viewModel(),
-    postingViewModel:PostingViewModel = viewModel()
+    postingViewModel:PostingViewModel = viewModel(),
+    onNavigateToLogin:()->Unit
 ){
     NavHost(navController = navController, startDestination = BottomNavigationItem.Home.route) {
         composable(BottomNavigationItem.Home.route){
@@ -120,7 +121,8 @@ fun NavigationGraph(
                 onNavigateToProfileFix= {navController.navigate("profileFix")},
                 navigationViewModel,
                 profileViewModel,
-                searchViewModel
+                searchViewModel,
+                onNavigateToLogin
             )
         }
         composable("reply"){
@@ -133,7 +135,8 @@ fun NavigationGraph(
             ProfileFixView(
                 onNavigatePopBackStack = {navController.popBackStack(BottomNavigationItem.Profile.route,false)},
                 navigationViewModel,
-                profileViewModel
+                profileViewModel,
+                navController
             )
         }
         composable("posting"){

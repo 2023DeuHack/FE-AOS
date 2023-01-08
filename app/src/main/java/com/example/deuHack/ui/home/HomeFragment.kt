@@ -1,5 +1,6 @@
 package com.example.deuHack.ui.compose.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -34,6 +35,7 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.fragment.findNavController
 import com.example.deuHack.R
 import com.example.deuHack.data.domain.model.PostImage
 import com.example.deuHack.data.domain.model.PostModel
@@ -58,7 +60,14 @@ class HomeFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                MainView()
+                MainView(onNavigateToLogin = {
+                    context.applicationContext
+                        .getSharedPreferences("accessToken", Context.MODE_PRIVATE)
+                        .edit()
+                        .putString("accessToken","")
+                        .apply()
+                    findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
+                })
             }
         }
     }
@@ -74,6 +83,7 @@ object Colors{
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView(
+    onNavigateToLogin : ()-> Unit,
     homeViewModel: HomeViewModel = viewModel(),
     searchViewModel: SearchViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel()
@@ -90,7 +100,8 @@ fun MainView(
                     navController = navBottomController,
                     homeViewModel,
                     searchViewModel,
-                    navigationViewModel
+                    navigationViewModel,
+                    onNavigateToLogin = onNavigateToLogin
                 )
 
             }
@@ -181,10 +192,10 @@ fun HomeStory(
             }
 
             items(items = homePostingList, key = {item-> item.id }){item->
-                /*if(item.image.isNullOrEmpty())
+                if(item.image.isNullOrEmpty())
                     item.image= listOf(PostImage(""))
                 if(item.image!!.get(0).image.isNullOrEmpty())
-                    item.image!!.get(0).image=""*/
+                    item.image!!.get(0).image=""
                 HomeStoryMediaItem(onNavigateToReply,item,homeViewModel)
             }
         }
@@ -225,7 +236,6 @@ fun HomeStoryMediaItem(
                 )
             }
         }
-        Log.d("test","image : ${item.image.toString()}")
 
         GlideImage(
             imageModel = "http://113.198.235.148:8887"+item.image?.get(0)?.image,

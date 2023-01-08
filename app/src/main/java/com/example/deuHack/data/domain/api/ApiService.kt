@@ -64,4 +64,7 @@ interface ApiService {
 
     @GET("post/likes/{id}")
     suspend fun lovePost(@Header("Authorization") token:String, @Path("id") id:Int):PostingLikeResponseDTO
+
+    @GET("post/comment/{id}")
+    suspend fun getPostingReply(@Header("Authorization") token:String, @Path("id") id:Int):PostingReplyResponseDTO
 }

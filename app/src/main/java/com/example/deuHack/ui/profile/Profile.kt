@@ -56,7 +56,8 @@ fun ProfileBottomSheetDialog(
     onNavigateToProfileFix:()->Unit,
     navigationViewModel: NavigationViewModel,
     profileViewModel: ProfileViewModel,
-    searchViewModel: SearchViewModel
+    searchViewModel: SearchViewModel,
+    onNavigateToLogin:()->Unit
 ){
     val modalBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val userState by profileViewModel.userState.collectAsStateWithLifecycle()
@@ -128,7 +129,8 @@ fun ProfileBottomSheetDialog(
             modalBottomSheetState,
             userState = userState,
             searchViewModel,
-            profileViewModel
+            profileViewModel,
+            onNavigateToLogin
         )
     }
 }
@@ -144,7 +146,8 @@ fun ProfileView(
     modalBottomSheetState:ModalBottomSheetState,
     userState: UserModel,
     searchViewModel:SearchViewModel,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    onNavigateToLogin:()->Unit
 ){
     navigationViewModel.setBottomNavigationState(true)
     val verticalScrollState = rememberScrollState()
@@ -154,7 +157,7 @@ fun ProfileView(
     val myPostingState by profileViewModel.myPostingState.collectAsStateWithLifecycle()
 
     Scaffold(topBar = {
-        ProfileTopBar(modalBottomSheetState,userState)
+        ProfileTopBar(modalBottomSheetState,userState,onNavigateToLogin)
     }) {
         Column(
             Modifier
@@ -168,7 +171,7 @@ fun ProfileView(
                 ProfileMember(userState)
                 ProfileEdit(onNavigateToProfileFix,userState,findPeopleState)
                 Spacer(modifier = Modifier.height(10.dp))
-                ProfileSearchFriends(searchViewModel,findPeopleState)
+                ProfileSearchFriends(searchViewModel,findPeopleState,profileViewModel)
                 ProfilePicture(myPostingState)
             }
         }
@@ -315,7 +318,11 @@ fun ProfileEdit(
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
-fun ProfileSearchFriends(searchViewModel:SearchViewModel,findPeopleState:MutableState<Boolean>){
+fun ProfileSearchFriends(
+    searchViewModel:SearchViewModel,
+    findPeopleState:MutableState<Boolean>,
+    profileViewModel:ProfileViewModel
+){
     val userAllState by searchViewModel.userAllState.collectAsStateWithLifecycle()
     
     Column() {
@@ -332,7 +339,7 @@ fun ProfileSearchFriends(searchViewModel:SearchViewModel,findPeopleState:Mutable
         LazyRow(){
             if(findPeopleState.value){
                 items(userAllState,key = {item -> item.userId}){item->
-                    ProfileSearchFriendsItems(item,searchViewModel)
+                    ProfileSearchFriendsItems(item,searchViewModel,profileViewModel)
                     Spacer(modifier = Modifier.width(5.dp))
                 }
             }
@@ -343,7 +350,8 @@ fun ProfileSearchFriends(searchViewModel:SearchViewModel,findPeopleState:Mutable
 @Composable
 fun ProfileSearchFriendsItems(
     item: UserModel,
-    searchViewModel: SearchViewModel
+    searchViewModel: SearchViewModel,
+    profileViewModel: ProfileViewModel
 ){
     Column(modifier = Modifier
         .width(150.dp)
@@ -399,6 +407,7 @@ fun ProfileSearchFriendsItems(
             Spacer(modifier = Modifier.height(10.dp))
             Button(onClick = {
                 searchViewModel.followUser(item.userNickName)
+                profileViewModel.getUserAllInfo()
             },
                 colors = ButtonDefaults.buttonColors(Colors.Blue_1877F2),
                 shape = RoundedCornerShape(5.dp),

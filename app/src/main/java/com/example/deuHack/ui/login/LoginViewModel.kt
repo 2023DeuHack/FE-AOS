@@ -3,12 +3,14 @@ package com.example.deuHack.ui.login
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.deuHack.data.data.model.ApiResult
 import com.example.deuHack.data.domain.model.LoginModel
+import com.example.deuHack.data.domain.model.RegisterModel
 import com.example.deuHack.data.domain.repository.LoginRepository
 import com.example.deuHack.data.domain.repository.ProfileRepository
 import com.example.deuHack.ui.Utils.getToken
@@ -30,6 +32,11 @@ class LoginViewModel @Inject constructor(
     val loginModel:LiveData<LoginModel> get() = mutableLoginModel
     private val mutableLoginState = MutableLiveData<Boolean>(false)
     val loginState:LiveData<Boolean> get() = mutableLoginState
+
+    val mutableRegisterModel = MutableLiveData(RegisterModel())
+    val registerModel :LiveData<RegisterModel> get() = mutableRegisterModel
+    val mutableRegisterState = MutableLiveData(false)
+    val registerState:LiveData<Boolean> get() = mutableRegisterState
 
     init {
         AutoLogin()
@@ -78,13 +85,19 @@ class LoginViewModel @Inject constructor(
 
     fun register(){
         viewModelScope.launch {
-            loginRepository.register().collectLatest {
+            loginRepository.register(registerModel.value?: RegisterModel()).collectLatest {
                 when(it){
                     is ApiResult.Success<*> ->{
                         Log.d("test","회원가입 성공")
+                        mutableRegisterState.value=true
+                    }
+                    is ApiResult.Fail->{
+                        Toast.makeText(context,it.message,Toast.LENGTH_SHORT).show()
+                        mutableRegisterState.value=false
                     }
                     is ApiResult.Exception ->{
-                        Log.d("test",it.e.message.toString())
+                        Toast.makeText(context,it.e.message.toString(),Toast.LENGTH_SHORT).show()
+                        mutableRegisterState.value=false
                     }
                 }
             }

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context = ".ui.login.RegisterFragment">
+    <data>
+        <variable
+            name="loginViewModel"
+            type="com.example.deuHack.ui.login.LoginViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true">
+
+        <EditText
+            android:id="@+id/editText5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="9dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/edittext_rounded_corner_rectangle"
+            android:hint="비밀번호2 입력"
+            android:minHeight="48dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp"
+            android:text="@={loginViewModel.mutableRegisterModel.passWord2}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText" />
+
+        <EditText
+            android:id="@+id/editText4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/edittext_rounded_corner_rectangle"
+            android:hint="사용자 이름 입력"
+            android:minHeight="48dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp"
+            android:text="@={loginViewModel.mutableRegisterModel.nickName}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText5" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/edittext_rounded_corner_rectangle"
+            android:hint="비밀번호1 입력"
+            android:minHeight="48dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp"
+            android:text="@={loginViewModel.mutableRegisterModel.passWord1}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText2" />
+
+        <Button
+            android:id="@+id/listDialogButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00ff0000"
+            android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+            android:text="한국어 (대한민국)"
+            android:textColor="#808080"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- 어플 로고 -->
+        <ImageView
+            android:id="@+id/insta_logo"
+            android:layout_width="180dp"
+            android:layout_height="80dp"
+            android:src="@drawable/instagram_text_logo"
+            app:layout_constraintBottom_toTopOf="@+id/editText3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        <!-- 아이디 입력 -->
+        <EditText
+            android:id="@+id/editText3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/edittext_rounded_corner_rectangle"
+            android:hint="이메일 입력"
+            android:minHeight="48dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp"
+            android:singleLine="true"
+            android:text="@={loginViewModel.mutableRegisterModel.email}"
+            app:layout_constraintBottom_toTopOf="@+id/editText2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        <!-- 비밀번호 입력 -->
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/edittext_rounded_corner_rectangle"
+            android:hint="닉네임 입력"
+            android:text="@={loginViewModel.mutableRegisterModel.userName}"
+            android:minHeight="48dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/login_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/blue_btn"
+            android:text="회원 가입"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText4" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

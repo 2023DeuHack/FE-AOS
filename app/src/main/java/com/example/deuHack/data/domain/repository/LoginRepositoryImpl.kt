@@ -4,6 +4,7 @@ import androidx.databinding.ObservableField
 import com.example.deuHack.data.data.model.*
 import com.example.deuHack.data.domain.api.ApiService
 import com.example.deuHack.data.domain.model.LoginModel
+import com.example.deuHack.data.domain.model.RegisterModel
 import com.example.deuHack.data.utils.HandleFlowUtils.handleFlowApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -31,13 +32,14 @@ class LoginRepositoryImpl @Inject constructor(private val apiService: ApiService
             }
         }
 
-    override fun register(): Flow<Any> = handleFlowApi {
+    override fun register(registerModel: RegisterModel): Flow<Any> = handleFlowApi {
         apiService.register(RegisterRequestDTO(
-            "jinho",
-            "jinho@email.com",
-            "jinho1234",
-            "jinho1234",
-            "jino"))
+            registerModel.userName.get()?:"",
+            registerModel.email.get()?:"",
+            registerModel.passWord1.get()?:"",
+            registerModel.passWord2.get()?:"",
+            registerModel.nickName.get()?:"")
+        )
     }
 
     fun LoginResponseDTO.asDomain() = LoginModel(

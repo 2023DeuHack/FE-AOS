@@ -82,6 +82,25 @@ class PostingRepositoryImpl @Inject constructor(private val apiService: ApiServi
         }
     }
 
+    override fun getPostingReply(token: String, id: Int): Flow<Any> = handleFlowApi {
+        apiService.getPostingReply(token,id)
+    }.map {
+        when(it){
+            is ApiResult.Success ->{
+
+            }
+            is ApiResult.Fail -> {
+                it
+            }
+            is ApiResult.Exception->{
+                it
+            }
+            else->{it}
+        }
+    }
+
+    //fun PostingReplyResponseDTO.asDomain() =
+
     fun List<PostingListResponseDTO>.asDomain() = map { it.asDomain() }
 
     fun PostingListResponseDTO.asDomain() = PostModel(

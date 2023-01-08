@@ -14,4 +14,6 @@ interface PostingRepository {
     fun lovePost(token:String,id:Int):Flow<String>
 
     fun getMyPosting(token:String):Flow<Any>
+
+    fun getPostingReply(token:String,id:Int):Flow<Any>
 }

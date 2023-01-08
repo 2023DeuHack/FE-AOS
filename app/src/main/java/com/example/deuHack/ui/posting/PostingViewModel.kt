@@ -56,8 +56,8 @@ class PostingViewModel @Inject constructor(
 
                     }
                 }
+                postingRepository.posting(token)
             }
-            postingRepository.posting(token)
         }
     }
 
