@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.login.LoginFragment">
+    <data>
+        <variable
+            name="loginViewModel"
+            type="com.example.deuHack.ui.login.LoginViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true">
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00ff0000"
+            android:text="로그인 상세 정보를 잊으셨나요? 로그인 도움말 보기."
+            android:textColor="#808080"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/login_btn" />
+
+        <!-- 언어 설정 리스트형 다이얼로그 -->
+        <Button
+            android:id="@+id/listDialogButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00ff0000"
+            android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+            android:text="한국어 (대한민국)"
+            android:textColor="#808080"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- 어플 로고 -->
+        <ImageView
+            android:id="@+id/insta_logo"
+            android:layout_width="180dp"
+            android:layout_height="80dp"
+            android:src="@drawable/instagram_text_logo"
+            app:layout_constraintBottom_toTopOf="@+id/editText3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        <!-- 아이디 입력 -->
+        <EditText
+            android:id="@+id/editText3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/edittext_rounded_corner_rectangle"
+            android:hint="@string/id_info"
+            android:text="@={loginViewModel.loginModel.email}"
+            android:minHeight="48dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp"
+            android:singleLine="true"
+            app:layout_constraintBottom_toTopOf="@+id/editText2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        <!-- 비밀번호 입력 -->
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/edittext_rounded_corner_rectangle"
+            android:hint="@string/password"
+            android:text="@={loginViewModel.loginModel.password}"
+            android:minHeight="48dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/login_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/blue_btn"
+            android:text="@string/login_button"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText2" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:drawableStart="@drawable/drawable_resize"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="@string/login_facebook"
+            android:textColor="#1178F2"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view6" />
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="15dp"
+            android:background="#C8C8C8"
+            app:layout_constraintBottom_toTopOf="@+id/textView6"
+            tools:layout_editor_absoluteX="6dp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:text="@string/no_account_question"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/textView5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:paddingLeft="5dp"
+            android:text="가입하기."
+            android:textColor="#38458F"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/textView6" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@string/or"
+            app:layout_constraintBottom_toBottomOf="@+id/view6"
+            app:layout_constraintEnd_toStartOf="@+id/view7"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/view6"
+            app:layout_constraintTop_toBottomOf="@+id/button2" />
+
+        <View
+            android:id="@+id/view6"
+            android:layout_width="0dp"
+            android:layout_height="2px"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:background="#C8C8C8"
+            app:layout_constraintEnd_toStartOf="@+id/textView7"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button2" />
+
+        <View
+            android:id="@+id/view7"
+            android:layout_width="0dp"
+            android:layout_height="2px"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="25dp"
+            android:background="#C8C8C8"
+            app:layout_constraintBottom_toBottomOf="@+id/textView7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView7"
+            app:layout_constraintTop_toTopOf="@+id/textView7"
+            app:layout_constraintVertical_bias="0.444" />
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
