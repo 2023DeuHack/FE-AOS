@@ -39,12 +39,14 @@ import androidx.navigation.fragment.findNavController
 import com.example.deuHack.R
 import com.example.deuHack.data.domain.model.PostImage
 import com.example.deuHack.data.domain.model.PostModel
+import com.example.deuHack.data.domain.model.UserModel
 import com.example.deuHack.ui.navigation.InstagramBottomNavigation
 import com.example.deuHack.ui.navigation.NavigationGraph
 import com.example.deuHack.ui.navigation.NavigationViewModel
 import com.example.deuHack.ui.content.HomeTopBar
 import com.example.deuHack.ui.home.*
 import com.example.deuHack.ui.parseBitmap
+import com.example.deuHack.ui.profile.ProfileViewModel
 import com.example.deuHack.ui.search.SearchViewModel
 import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.glide.GlideImage
@@ -175,9 +177,12 @@ fun HomeStory(
     onNavigateToReply:()-> Unit,
     homeViewModel: HomeViewModel,
     navigationViewModel: NavigationViewModel,
-    onNavigateToPosting : ()-> Unit
+    onNavigateToPosting : ()-> Unit,
+    profileViewModel: ProfileViewModel
 ){
     val homePostingList by homeViewModel.positngListState.collectAsStateWithLifecycle()
+    val myFollowList by profileViewModel.userState.collectAsStateWithLifecycle()
+    profileViewModel.getUserAllInfo()
     navigationViewModel.setBottomNavigationState(true)
     val scrollState = rememberLazyListState()
     homeViewModel.getPostList()
@@ -196,7 +201,7 @@ fun HomeStory(
                     item.image= listOf(PostImage(""))
                 if(item.image!!.get(0).image.isNullOrEmpty())
                     item.image!!.get(0).image=""
-                HomeStoryMediaItem(onNavigateToReply,item,homeViewModel)
+                HomeStoryMediaItem(onNavigateToReply,item,homeViewModel,myFollowList)
             }
         }
     }
@@ -207,7 +212,8 @@ fun HomeStory(
 fun HomeStoryMediaItem(
     onNavigateToReply: () -> Unit,
     item: PostModel,
-    homeViewModel:HomeViewModel
+    homeViewModel:HomeViewModel,
+    myFollowList:UserModel
 ){
     var content by remember{
         mutableStateOf(
@@ -217,6 +223,19 @@ fun HomeStoryMediaItem(
                 item.content
         )
     }
+    var likeState by remember {
+        mutableStateOf(false)
+    }
+    item.heartNumber?.forEach {
+        if(it.follower==myFollowList.userNickName)
+            likeState=true
+    }
+    if(item.heartNumber?.isNotEmpty()?:false){
+        for(ite in item.heartNumber!!){
+            Log.d("test",ite.follower.toString())
+        }
+    }
+
 
     Column() {
         Row(
@@ -252,14 +271,18 @@ fun HomeStoryMediaItem(
                 .height(300.dp)
         )
 
-
         Row() {
             IconButton(onClick = {
                 homeViewModel.lovePosting(item.id)
                 homeViewModel.getPostList()
+                likeState=!likeState
             }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.icon_heart),
+                    painter = painterResource(id =
+                    if(!likeState)
+                        R.drawable.icon_heart
+                    else
+                        R.drawable.icon_heart_clicked),
                     contentDescription = null
                 )
             }
@@ -275,7 +298,7 @@ fun HomeStoryMediaItem(
         }
         Row(Modifier.padding(3.dp)) {
             Text(
-                text = "좋아요 ${item.heartNumber}개",
+                text = "좋아요 ${item.heartNumber?.size?:0}개",
                 fontWeight = FontWeight.W900,
                 fontSize = 14.sp
             )

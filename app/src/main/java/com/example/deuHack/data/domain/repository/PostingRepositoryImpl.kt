@@ -2,8 +2,10 @@ package com.example.deuHack.data.domain.repository
 
 import com.example.deuHack.data.data.model.*
 import com.example.deuHack.data.domain.api.ApiService
+import com.example.deuHack.data.domain.model.LikePostUser
 import com.example.deuHack.data.domain.model.PostImage
 import com.example.deuHack.data.domain.model.PostModel
+import com.example.deuHack.data.domain.model.UserFollowModel
 import com.example.deuHack.data.utils.HandleFlowUtils.handleFlowApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -53,7 +55,7 @@ class PostingRepositoryImpl @Inject constructor(private val apiService: ApiServi
     }.map {
         when(it){
             is ApiResult.Success->{
-                it.result.like
+                it.result.nickname
             }
             is ApiResult.Fail->{
                 it.message
@@ -99,8 +101,6 @@ class PostingRepositoryImpl @Inject constructor(private val apiService: ApiServi
         }
     }
 
-    //fun PostingReplyResponseDTO.asDomain() =
-
     fun List<PostingListResponseDTO>.asDomain() = map { it.asDomain() }
 
     fun PostingListResponseDTO.asDomain() = PostModel(
@@ -111,8 +111,16 @@ class PostingRepositoryImpl @Inject constructor(private val apiService: ApiServi
         this.images.asDomain(),
         this.created_at,
         this.user,
-        this.like.size,
+        this.like.asDomainLike(),
         ""
+    )
+
+    fun List<PostingLikeResponseDTO>.asDomainLike() = map {
+        it.asDomainLike()
+    }
+
+    fun PostingLikeResponseDTO.asDomainLike() = LikePostUser(
+        this.nickname
     )
 
     fun PostingProfileImageDTO.asDomain() = this.profile_image
@@ -128,7 +136,7 @@ class PostingRepositoryImpl @Inject constructor(private val apiService: ApiServi
         this.images.asDomain(),
         this.created_at,
         this.user,
-        0,""
+        null,""
     )
 
     fun PostingImageDTO.asDomain() = PostImage(
@@ -143,4 +151,3 @@ class PostingRepositoryImpl @Inject constructor(private val apiService: ApiServi
 
     fun PostImage.asDTO() = PostingImageDTO(this.image)
 }
-

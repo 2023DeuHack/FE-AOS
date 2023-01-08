@@ -20,6 +20,6 @@ data class PostingProfileImageDTO(
 )
 
 data class PostingLikeResponseDTO(
-    val like:String
+    val nickname:String
 )
 
