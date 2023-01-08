@@ -1,12 +1,14 @@
 package com.example.deuHack.ui.compose.ui
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,14 +24,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -40,17 +40,19 @@ import com.example.deuHack.R
 import com.example.deuHack.data.domain.model.PostImage
 import com.example.deuHack.data.domain.model.PostModel
 import com.example.deuHack.data.domain.model.UserModel
+import com.example.deuHack.ui.content.HomeTopBar
+import com.example.deuHack.ui.home.*
 import com.example.deuHack.ui.navigation.InstagramBottomNavigation
 import com.example.deuHack.ui.navigation.NavigationGraph
 import com.example.deuHack.ui.navigation.NavigationViewModel
-import com.example.deuHack.ui.content.HomeTopBar
-import com.example.deuHack.ui.home.*
-import com.example.deuHack.ui.parseBitmap
 import com.example.deuHack.ui.profile.ProfileViewModel
 import com.example.deuHack.ui.search.SearchViewModel
 import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.glide.GlideImage
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -112,7 +114,7 @@ fun MainView(
 }
 
 @Composable
-fun HomeTopBarIcon(@DrawableRes id:Int,){
+fun HomeTopBarIcon(@DrawableRes id: Int){
     IconButton(onClick = { /*TODO*/ }) {
         Icon(
             painter = painterResource(id = id),
@@ -171,6 +173,7 @@ fun HomeMyStory(){
     }
 }
 
+
 @OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun HomeStory(
@@ -206,6 +209,7 @@ fun HomeStory(
         }
     }
 }
+
 
 
 @Composable
@@ -334,10 +338,10 @@ fun HomeStoryMediaItem(
             Text(
                 text = item.created_at,
                 fontSize = 9.sp,
-                color = Colors.gray_999b9e
-            )
+                color = Colors.gray_999b9e)
         }
-        
+
+
     }
 }
 
