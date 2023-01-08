@@ -42,7 +42,9 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
+import androidx.navigation.NavHostController
 import com.example.deuHack.ui.absolutelyPath
+import com.example.deuHack.ui.navigation.BottomNavigationItem
 import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -51,7 +53,8 @@ import com.skydoves.landscapist.glide.GlideImage
 fun ProfileFixView(
     onNavigatePopBackStack : ()->Unit,
     navigationViewModel: NavigationViewModel,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    navController:NavHostController
 ){
     val focusManager = LocalFocusManager.current
     navigationViewModel.setBottomNavigationState(false)
@@ -78,7 +81,8 @@ fun ProfileFixView(
             textName,
             textNickName,
             textIntroduce,
-            imgUri
+            imgUri,
+            navController
         )},
         containerColor = Color.White
     ) {
@@ -100,7 +104,8 @@ fun ProfileFixTopBar(
     textName:MutableState<String>,
     textNickName:MutableState<String>,
     textIntroduce:MutableState<String>,
-    imgUri:MutableState<String>
+    imgUri:MutableState<String>,
+    navController:NavHostController
 ){
     SmallTopAppBar(
         title = {
@@ -123,6 +128,7 @@ fun ProfileFixTopBar(
                         null
                     )
                 )
+                navController.popBackStack(BottomNavigationItem.Profile.route,true)
             }) {
                 Icon(painter = painterResource(id = R.drawable.icon_check),
                     contentDescription = null,

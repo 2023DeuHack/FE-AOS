@@ -29,6 +29,10 @@ class LoginFragment : BindFragment<LoginFragmentBinding>(R.layout.login_fragment
         binding.loginBtn.setOnClickListener{
             loginViewModel.login()
         }
+
+        binding.fragmentContainer.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+        }
     }
 
 }
