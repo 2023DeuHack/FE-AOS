@@ -1,4 +1,4 @@
-package com.example.fe_insta
+package com.example.deuHack
 
 import org.junit.Test
 
