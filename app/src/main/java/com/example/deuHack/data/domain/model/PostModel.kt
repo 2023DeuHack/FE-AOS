@@ -8,10 +8,14 @@ data class PostModel(
     var image:List<PostImage>? = listOf(PostImage("")),
     val created_at:String= "",
     val user:String= "",
-    val heartNumber:Int=0,
+    val heartNumber:List<LikePostUser>? =null,
     val reply:String= ""
 )
 
 data class PostImage(
     var image:String? =""
+)
+
+data class LikePostUser(
+    val follower:String?
 )

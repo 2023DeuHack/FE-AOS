@@ -104,7 +104,8 @@ fun NavigationGraph(
                 onNavigateToReply = {navController.navigate("reply")},
                 homeViewModel,
                 navigationViewModel,
-                onNavigateToPosting = {navController.navigate("posting")}
+                onNavigateToPosting = {navController.navigate("posting")},
+                profileViewModel
             )
         }
         composable(BottomNavigationItem.Search.route){
