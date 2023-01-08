@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">FE_instagram</string>
+    <string name="id_info">전화번호, 이메일 주소 또는 사용자 이름</string>
+    <string name="password">비밀번호</string>
+    <string name="login_button">로그인</string>
+    <string name="did_you_forgot_login_info">로그인 상세 정보를 잊으셨나요?</string>
+    <string name="see_login_help">로그인 도움말 보기.</string>
+    <string name="or">또는</string>
+    <string name="login_facebook">Facebook으로 로그인</string>
+    <string name="no_account_question">계정이 없으신가요?</string>
+</resources>
