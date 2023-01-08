@@ -1,4 +1,4 @@
-package com.example.fe_insta
+package com.example.deuHack
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
