@@ -128,7 +128,7 @@ fun ProfileFixTopBar(
                         null
                     )
                 )
-                navController.popBackStack(BottomNavigationItem.Profile.route,true)
+                navController.popBackStack(BottomNavigationItem.Profile.route,false)
             }) {
                 Icon(painter = painterResource(id = R.drawable.icon_check),
                     contentDescription = null,
