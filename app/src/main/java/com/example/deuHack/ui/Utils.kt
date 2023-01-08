@@ -11,6 +11,8 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.input.pointer.pointerInput
+import java.io.File
+import java.io.InputStream
 
 object Utils {
     @JvmStatic
@@ -43,7 +45,7 @@ fun absolutelyPath(path: Uri?, context : Context): String {
 }
 
 @Suppress("DEPRECATION", "NewApi")
-private fun Uri.parseBitmap(context: Context): Bitmap {
+fun Uri.parseBitmap(context: Context): Bitmap {
     return when (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) { // 28
         true -> {
             val source = ImageDecoder.createSource(context.contentResolver, this)
@@ -53,4 +55,10 @@ private fun Uri.parseBitmap(context: Context): Bitmap {
             MediaStore.Images.Media.getBitmap(context.contentResolver, this)
         }
     }
+}
+
+fun convertInputStreamToFile(input: InputStream?): File? {
+    val tempFile = File.createTempFile(java.lang.String.valueOf(input.hashCode()), ".tmp")
+    tempFile.deleteOnExit()
+    return tempFile
 }

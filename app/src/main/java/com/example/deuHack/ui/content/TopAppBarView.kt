@@ -46,8 +46,11 @@ fun HomeTopBar(onNavigateToPosting : () -> Unit){
             Icon(
                 painter = painterResource(id = R.drawable.icon_add),
                 contentDescription = null,
-                modifier = Modifier.clickable(onClick = onNavigateToPosting)
+                modifier = Modifier
+                    .clickable(onClick = onNavigateToPosting)
+                    .size(28.dp)
             )
+            Spacer(modifier = Modifier.width(13.dp))
             HomeTopBarIcon(id = R.drawable.icon_heart)
             HomeTopBarIcon(id = R.drawable.icon_dm)
         },
@@ -107,21 +110,20 @@ fun ReplyTopBar(onNavigatePopBackStack:()->Unit){
 @Composable
 fun PostingTopBar(
     onNavigatePopBackStack:()->Unit,
-    postingViewModel: PostingViewModel
+    onNavigatePopBackAndPostData:()->Unit
 ){
     SmallTopAppBar(
         title = {
             Text(text = "새 게시물", fontSize = 24.sp, fontWeight = FontWeight.Bold) },
         navigationIcon = {
             IconButton(onClick = onNavigatePopBackStack) {
-                Icon(painter = painterResource(id = com.example.deuHack.R.drawable.icon_left_arrow),
+                Icon(painter = painterResource(id = R.drawable.icon_left_arrow),
                     contentDescription = null)
             }
         },
         actions = {
-            IconButton(onClick = {
-
-            }) {
+            IconButton(onClick = onNavigatePopBackAndPostData
+            ) {
                 Icon(painter = painterResource(id = R.drawable.icon_check),
                     contentDescription = null,
                     tint = Colors.Blue_1877F2

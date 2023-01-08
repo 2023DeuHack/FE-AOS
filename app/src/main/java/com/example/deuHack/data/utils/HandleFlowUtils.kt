@@ -15,8 +15,6 @@ object HandleFlowUtils {
             emit(ApiResult.Success(execute()))
         } catch (e: HttpException) {
             emit(ApiResult.Fail(e.code().toString(), e.message(), e.code().toString()))
-        } catch (e:NullPointerException){
-
         }
         catch (e: Exception) {
             emit(ApiResult.Exception(e=e))

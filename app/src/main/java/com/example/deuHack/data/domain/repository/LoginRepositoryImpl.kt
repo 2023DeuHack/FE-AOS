@@ -40,10 +40,6 @@ class LoginRepositoryImpl @Inject constructor(private val apiService: ApiService
             "jino"))
     }
 
-    override fun AutoLogin(token: String): Flow<ApiResult<Boolean>> = handleFlowApi {
-        apiService.autoLogin(TokenRequestDTO(token))
-    }
-
     fun LoginResponseDTO.asDomain() = LoginModel(
         this.access_token,
         this.refresh_token,

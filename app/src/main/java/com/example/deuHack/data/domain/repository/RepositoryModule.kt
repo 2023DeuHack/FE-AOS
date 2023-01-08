@@ -26,4 +26,6 @@ interface RepositoryModule {
     @Singleton
     @Binds
     abstract fun bindsSearchRepository(searchRepositoryImpl: SearchRepositoryImpl): SearchRepository
+
+
 }

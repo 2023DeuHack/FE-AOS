@@ -1,6 +1,7 @@
 package com.example.deuHack.ui.compose.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -19,24 +21,28 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.deuHack.R
+import com.example.deuHack.data.domain.model.PostImage
 import com.example.deuHack.data.domain.model.PostModel
 import com.example.deuHack.ui.navigation.InstagramBottomNavigation
 import com.example.deuHack.ui.navigation.NavigationGraph
 import com.example.deuHack.ui.navigation.NavigationViewModel
 import com.example.deuHack.ui.content.HomeTopBar
 import com.example.deuHack.ui.home.*
+import com.example.deuHack.ui.parseBitmap
 import com.example.deuHack.ui.search.SearchViewModel
 import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.glide.GlideImage
@@ -162,17 +168,24 @@ fun HomeStory(
 ){
     val homePostingList by homeViewModel.positngListState.collectAsStateWithLifecycle()
     navigationViewModel.setBottomNavigationState(true)
+    val scrollState = rememberLazyListState()
+    homeViewModel.getPostList()
 
     Scaffold(topBar = {
         HomeTopBar(onNavigateToPosting)
     }, containerColor = Color.White
     ) {
-        LazyColumn() {
+        LazyColumn(state=scrollState) {
             item {
                 HomeTopLayout()
             }
+
             items(items = homePostingList, key = {item-> item.id }){item->
-                HomeStoryMediaItem(onNavigateToReply,item)
+                /*if(item.image.isNullOrEmpty())
+                    item.image= listOf(PostImage(""))
+                if(item.image!!.get(0).image.isNullOrEmpty())
+                    item.image!!.get(0).image=""*/
+                HomeStoryMediaItem(onNavigateToReply,item,homeViewModel)
             }
         }
     }
@@ -182,14 +195,15 @@ fun HomeStory(
 @Composable
 fun HomeStoryMediaItem(
     onNavigateToReply: () -> Unit,
-    item: PostModel
+    item: PostModel,
+    homeViewModel:HomeViewModel
 ){
     var content by remember{
         mutableStateOf(
-            if(item.content.isNotEmpty())
+            if(item.content.isNotEmpty()&&item.content.length>4)
                 item.content.slice(0..4)
             else
-                ""
+                item.content
         )
     }
 
@@ -201,7 +215,7 @@ fun HomeStoryMediaItem(
         {
             Row(Modifier.weight(1f)) {
                 Text(text = "회원님이 ", fontSize = 12.sp)
-                Text(text = "xxxx", fontWeight = FontWeight.W900,fontSize = 12.sp)
+                Text(text = item.user, fontWeight = FontWeight.W900,fontSize = 12.sp)
                 Text(text = "님의 릴스를 시청했습니다",fontSize = 12.sp)
             }
             IconButton(onClick = { /*TODO*/ }) {
@@ -211,8 +225,10 @@ fun HomeStoryMediaItem(
                 )
             }
         }
+        Log.d("test","image : ${item.image.toString()}")
+
         GlideImage(
-            imageModel = item.profile,
+            imageModel = "http://113.198.235.148:8887"+item.image?.get(0)?.image,
             // Crop, Fit, Inside, FillHeight, FillWidth, None
             contentScale = ContentScale.Crop,
             // shows an image with a circular revealed animation.
@@ -225,8 +241,18 @@ fun HomeStoryMediaItem(
                 .fillMaxWidth()
                 .height(300.dp)
         )
+
+
         Row() {
-            HomeIconButton(id = R.drawable.icon_heart)
+            IconButton(onClick = {
+                homeViewModel.lovePosting(item.id)
+                homeViewModel.getPostList()
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.icon_heart),
+                    contentDescription = null
+                )
+            }
             IconButton(onClick = onNavigateToReply) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_message),

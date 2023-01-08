@@ -6,6 +6,8 @@ import com.example.deuHack.data.data.model.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
@@ -13,6 +15,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.PartMap
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -22,11 +25,16 @@ interface ApiService {
     @POST("dj-rest-auth/login/")
     suspend fun login(@Body userInfo: LoginRequestDTO): LoginResponseDTO
 
-    @POST("dj-rest-auth/token/verify/")
-    suspend fun autoLogin(@Body token:TokenRequestDTO) : Boolean
+    @Multipart
+    @POST("post/diary/")
+    suspend fun postNewPosting(
+        @Header("Authorization") token:String,
+        @PartMap posting:HashMap<String,RequestBody>,
+        @Part postingImage: MultipartBody.Part
+    ):PostingResponseDTO
 
-    @POST("post/")
-    suspend fun posting(@Header("Authorization") token:String,@Body item: PostingDTO)
+    @GET("post/diary/")
+    suspend fun getMyPosting(@Header("Authorization") token:String):List<PostingListResponseDTO>
 
     @GET("dj-rest-auth/user/")
     suspend fun getUserInfo(@Header("Authorization") token:String): UserResponseDTO
@@ -53,4 +61,7 @@ interface ApiService {
 
     @GET("post/home")
     suspend fun getPostingList(@Header("Authorization") token:String):List<PostingListResponseDTO>
+
+    @GET("post/likes/{id}")
+    suspend fun lovePost(@Header("Authorization") token:String, @Path("id") id:Int):PostingLikeResponseDTO
 }

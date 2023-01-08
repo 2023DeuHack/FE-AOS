@@ -28,19 +28,12 @@ class HomeViewModel @Inject constructor(
     private val mutablePostingListState = MutableStateFlow(listOf(PostModel()))
     val positngListState get() = mutablePostingListState.asStateFlow()
 
-    init {
-        viewModelScope.launch {
-            getPostList()
-        }
-    }
-
     fun getPostList(){
         viewModelScope.launch {
             postingRepository.posting(token).collectLatest {
                 when(it){
                     is List<*> ->{
                         mutablePostingListState.emit(it as List<PostModel>)
-                        Log.d("test",it.toString())
                     }
                     is ApiResult.Fail->{
                         Toast.makeText(context,"데이터를 받는데 실패하였습니다.",Toast.LENGTH_SHORT).show()
@@ -49,6 +42,14 @@ class HomeViewModel @Inject constructor(
                         Log.d("test",it.e.message.toString())
                     }
                 }
+
+            }
+        }
+    }
+
+    fun lovePosting(id:Int){
+        viewModelScope.launch {
+            postingRepository.lovePost(token,id).collectLatest {
 
             }
         }
