@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -32,10 +33,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.deuHack.R
+import com.example.deuHack.data.domain.model.PostModel
 import com.example.deuHack.data.domain.model.UserModel
 import com.example.deuHack.ui.content.ProfileTopBar
 import com.example.deuHack.ui.compose.ui.Colors
 import com.example.deuHack.ui.navigation.NavigationViewModel
+import com.example.deuHack.ui.posting.PostingViewModel
 import com.example.deuHack.ui.profile.ProfileViewModel
 import com.example.deuHack.ui.search.SearchViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -124,14 +127,15 @@ fun ProfileBottomSheetDialog(
             navigationViewModel,
             modalBottomSheetState,
             userState = userState,
-            searchViewModel
+            searchViewModel,
+            profileViewModel
         )
     }
 }
 
 @OptIn(
     ExperimentalMaterial3Api::class,
-    ExperimentalMaterialApi::class,
+    ExperimentalMaterialApi::class, ExperimentalLifecycleComposeApi::class,
 )
 @Composable
 fun ProfileView(
@@ -139,13 +143,15 @@ fun ProfileView(
     navigationViewModel: NavigationViewModel,
     modalBottomSheetState:ModalBottomSheetState,
     userState: UserModel,
-    searchViewModel:SearchViewModel
+    searchViewModel:SearchViewModel,
+    profileViewModel: ProfileViewModel
 ){
     navigationViewModel.setBottomNavigationState(true)
     val verticalScrollState = rememberScrollState()
     val findPeopleState = remember {
         mutableStateOf(true)
     }
+    val myPostingState by profileViewModel.myPostingState.collectAsStateWithLifecycle()
 
     Scaffold(topBar = {
         ProfileTopBar(modalBottomSheetState,userState)
@@ -163,7 +169,7 @@ fun ProfileView(
                 ProfileEdit(onNavigateToProfileFix,userState,findPeopleState)
                 Spacer(modifier = Modifier.height(10.dp))
                 ProfileSearchFriends(searchViewModel,findPeopleState)
-                ProfilePicture(userState)
+                ProfilePicture(myPostingState)
             }
         }
     }
@@ -407,13 +413,14 @@ fun ProfileSearchFriendsItems(
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun ProfilePicture(userState: UserModel){
+fun ProfilePicture(myPostingState:List<PostModel>){
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val list:List<MyProfile> = listOf(
         MyProfile("pic",R.drawable.icon_grid_box),
         MyProfile("tag",R.drawable.icon_profile_2)
     )
+
 
     Column() {
         TabRow(
@@ -447,7 +454,8 @@ fun ProfilePicture(userState: UserModel){
         HorizontalPager(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(740.dp),
+                .height(350.dp)
+                .align(Alignment.Start),
             count = list.size,
             state = pagerState,
             verticalAlignment = Alignment.Top
@@ -455,12 +463,14 @@ fun ProfilePicture(userState: UserModel){
             when(page){
                 0->{
                     LazyVerticalGrid(
-                        columns = GridCells.Adaptive(100.dp),
-                        verticalArrangement = Arrangement.Top
+                        columns = GridCells.Adaptive(80.dp),
+                        verticalArrangement = Arrangement.Top,
+                        horizontalArrangement = Arrangement.Start,
+                        modifier = Modifier.fillMaxSize().padding(top=3.dp, start = 3.dp)
                     ){
-                       item{
+                       items(myPostingState,key={item->item.id}){item->
                            GlideImage(
-                               imageModel = userState.userProfileImage,
+                               imageModel = "http://113.198.235.148:8887"+item.image?.get(0)?.image,
                                // Crop, Fit, Inside, FillHeight, FillWidth, None
                                contentScale = ContentScale.Crop,
                                // shows an image with a circular revealed animation.
@@ -469,6 +479,7 @@ fun ProfilePicture(userState: UserModel){
                                placeHolder = ImageBitmap.imageResource(R.drawable.icon_profile),
                                // shows an error ImageBitmap when the request failed.
                                error = ImageBitmap.imageResource(R.drawable.icon_profile),
+                               modifier = Modifier.size(80.dp).padding(3.dp)
                            )
                        }
                     }

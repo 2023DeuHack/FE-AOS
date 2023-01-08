@@ -1,9 +1,12 @@
 package com.example.deuHack.ui.profile
 
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.deuHack.data.domain.model.PostModel
 import com.example.deuHack.data.domain.model.UserModel
+import com.example.deuHack.data.domain.repository.PostingRepository
 import com.example.deuHack.data.domain.repository.ProfileRepository
 import com.example.deuHack.ui.Utils.getToken
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,14 +26,19 @@ import kotlin.Pair
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
+    private val postingRepository: PostingRepository,
     @ApplicationContext private val context: Context
 ) :ViewModel(){
     private val mutableUserState = MutableStateFlow(UserModel())
     val userState : StateFlow<UserModel> = mutableUserState.asStateFlow()
     private val token = getToken(context)
 
+    private val mutableMyPostingState = MutableStateFlow(listOf(PostModel()))
+    val myPostingState = mutableMyPostingState.asStateFlow()
+
     init {
         getUserAllInfo()
+        getMyPosting()
     }
 
     fun getUserAllInfo(){
@@ -46,12 +54,6 @@ class ProfileViewModel @Inject constructor(
                 }
         }
 
-    }
-
-    fun convertInputStreamToFile(input: InputStream?): File? {
-        val tempFile = File.createTempFile(java.lang.String.valueOf(input.hashCode()), ".tmp")
-        tempFile.deleteOnExit()
-        return tempFile
     }
 
     fun modifyUserInfo(userModel: UserModel){
@@ -86,6 +88,21 @@ class ProfileViewModel @Inject constructor(
                 }*/
             }
             getUserAllInfo()
+        }
+    }
+
+    fun getMyPosting(){
+        viewModelScope.launch {
+            postingRepository.getMyPosting(token).collectLatest {
+                when(it){
+                    is List<*> ->{
+                        mutableMyPostingState.emit(it as List<PostModel>)
+                    }
+                    else ->{
+                        Toast.makeText(context,"오류가 발생하여 내 포스팅을 가져올 수 없습니다.",Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 }

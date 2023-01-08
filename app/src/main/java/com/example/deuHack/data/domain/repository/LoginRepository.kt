@@ -7,5 +7,4 @@ interface LoginRepository {
     fun login(loginModel: LoginModel):Flow<Any>
 
     fun register():Flow<Any>
-    fun AutoLogin(token:String):Flow<Any>
 }

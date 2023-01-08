@@ -68,7 +68,7 @@ fun ProfileFixView(
     }
 
     val imgUri:MutableState<String> = remember {
-        mutableStateOf("")
+        mutableStateOf(userState.userProfileImage?:"")
     }
 
     Scaffold(
@@ -172,7 +172,7 @@ fun ProfileFixImage(
         horizontalArrangement = Arrangement.Center){
 
             GlideImage(
-                imageModel = userState.userProfileImage,
+                imageModel = imgUri.value,
                 // Crop, Fit, Inside, FillHeight, FillWidth, None
                 contentScale = ContentScale.Crop,
                 // shows an image with a circular revealed animation.
@@ -184,7 +184,7 @@ fun ProfileFixImage(
                 modifier = Modifier
                     .size(64.dp)
                     .clip(CircleShape)
-                    .border(1.dp,Color.White, CircleShape)
+                    .border(1.dp, Color.White, CircleShape)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Image(painter = painterResource(id = R.drawable.icon_profile),

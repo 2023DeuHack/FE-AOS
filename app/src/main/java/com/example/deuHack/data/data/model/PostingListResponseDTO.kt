@@ -8,7 +8,7 @@ data class PostingListResponseDTO(
     val images:List<PostingImageDTO>,
     val user:String,
     val profile:PostingProfileImageDTO,
-    val like:List<String>
+    val like:List<PostingLikeResponseDTO>
 )
 
 data class PostingImageDTO(
@@ -17,5 +17,9 @@ data class PostingImageDTO(
 
 data class PostingProfileImageDTO(
     val profile_image:String?
+)
+
+data class PostingLikeResponseDTO(
+    val like:String
 )
 

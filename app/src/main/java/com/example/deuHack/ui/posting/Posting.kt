@@ -3,6 +3,7 @@ package com.example.deuHack.ui.posting
 import android.app.Activity
 import android.content.Intent
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,13 +35,17 @@ import com.skydoves.landscapist.glide.GlideImage
 @Composable
 fun PostingView(
     onNavigatePopBackStack : () -> Unit,
+    onNavigatePopBackAndPostData : ()->Unit,
     navigationViewModel:NavigationViewModel,
     postingViewModel: PostingViewModel
 ){
     val focusManager = LocalFocusManager.current
     navigationViewModel.setBottomNavigationState(false)
+    val text = remember {
+        mutableStateOf("")
+    }
     Scaffold(
-        topBar = {PostingTopBar(onNavigatePopBackStack,postingViewModel)},
+        topBar = {PostingTopBar(onNavigatePopBackStack,onNavigatePopBackAndPostData)},
         containerColor = Color.White
     ) {
         Column(
@@ -49,18 +53,18 @@ fun PostingView(
                 .padding(10.dp)
                 .fillMaxSize()
                 .addFocusCleaner(focusManager)) {
-            PostingImage(postingViewModel = postingViewModel)
+            PostingImage(text,postingViewModel = postingViewModel)
         }
     }
 }
 
 @Composable
-fun PostingImage(postingViewModel: PostingViewModel){
+fun PostingImage(
+    text:MutableState<String>,
+    postingViewModel: PostingViewModel
+){
     val context = LocalContext.current
-    var text by remember {
-        mutableStateOf("안녕")
-    }
-    val posting = postingViewModel.mutablePostModel.observeAsState()
+
     val postImage = remember {
         mutableStateOf("")
     }
@@ -69,6 +73,7 @@ fun PostingImage(postingViewModel: PostingViewModel){
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 postingViewModel.mutablePostModel.value?.image = listOf(PostImage(absolutelyPath(result.data?.data,context)))
+                Log.d("test","img: " +listOf(PostImage(absolutelyPath(result.data?.data,context))).toString())
                 postImage.value = absolutelyPath(result.data?.data,context)
             }
             else if (result.resultCode != Activity.RESULT_CANCELED) {
@@ -101,16 +106,16 @@ fun PostingImage(postingViewModel: PostingViewModel){
         }
         Spacer(modifier = Modifier.width(8.dp))
         BasicTextField(
-            value = text,
-            onValueChange = {text=it},
+            value = text.value,
+            onValueChange = {
+                text.value=it
+                postingViewModel.postModel.value?.content=it
+                            },
             decorationBox = {innerTextField ->
-                if(text.isEmpty())
+                if(text.value.isEmpty())
                     Text(text = "문구 입력...", color = Colors.gray_DADDE1, fontWeight = FontWeight.Bold)
                 innerTextField()
                 }
         )
-
     }
-
-
 }
